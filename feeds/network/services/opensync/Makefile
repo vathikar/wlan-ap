@@ -1,11 +1,11 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=opensync
-PKG_VERSION:=1.0
+PKG_VERSION:=2.0
 PKG_RELEASE:=1
 
 OPENSYNC_ROOTFS:=work/$(TARGET)/rootfs/
-PKG_BUILD_DEPENDS:=python3-kconfiglib/host
+PKG_BUILD_DEPENDS:=python3-kconfiglib/host python3-jinja2/host python3-markupsafe/host
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -37,9 +37,9 @@ define Package/opensync/install
 	$(INSTALL_DIR) $(1)/usr/plume/etc
 	$(INSTALL_DIR) $(1)/usr/plume/certs
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/plume/bin/* $(1)/usr/plume/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/plume/etc/* $(1)/usr/plume/etc
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/plume/tools/ovsh $(1)/usr/plume/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/opensync/bin/* $(1)/usr/plume/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/opensync/etc/* $(1)/usr/plume/etc
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/opensync/core/$(OPENSYNC_ROOTFS)/usr/opensync/tools/ovsh $(1)/usr/plume/bin
 	$(MAKE) -C $(PKG_BUILD_DIR)/opensync/core TARGET=$(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
 endef
 

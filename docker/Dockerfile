@@ -8,3 +8,4 @@ RUN apt-get update \
     && apt-get clean
 
 RUN pip3 install kconfiglib
+RUN pip3 -v install Jinja2

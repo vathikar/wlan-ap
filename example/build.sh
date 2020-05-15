@@ -32,6 +32,8 @@ if [ ! -d $BUILD_DIR ]; then
     tar x -C $BUILD_DIR/workdir -f $BUILD_DIR/$SDK_FILENAME --strip-components 1
     rm $BUILD_DIR/$SDK_FILENAME
     cp $BUILD_DIR/workdir/feeds.conf.default $BUILD_DIR/workdir/feeds.conf
+    echo "src-link markupsafe $ROOT_PATH/feeds/lang" >> $BUILD_DIR/workdir/feeds.conf
+    echo "src-link jinja2 $ROOT_PATH/feeds/lang" >> $BUILD_DIR/workdir/feeds.conf
     echo "src-link kconfiglib $ROOT_PATH/feeds/lang" >> $BUILD_DIR/workdir/feeds.conf
     echo "src-link opensync $ROOT_PATH/feeds/network" >> $BUILD_DIR/workdir/feeds.conf
     git apply patch/opensync/core/01-add-lib-uci-to-wm2.patch --directory=opensync/core

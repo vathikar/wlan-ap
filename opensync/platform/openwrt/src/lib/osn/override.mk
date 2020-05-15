@@ -27,15 +27,25 @@
 # OpenSync low level API
 #
 ##############################################################################
-UNIT_SRC := src/osn_dnsmasq.c
-UNIT_SRC += src/osn_dnsmasq6.c
-UNIT_SRC += src/osn_inet.c
-UNIT_SRC += src/osn_inet6.c
-UNIT_SRC += src/osn_odhcp6c.c
-UNIT_SRC += src/osn_priv_netlink.c
-UNIT_SRC += src/osn_route.c
+UNIT_SRC := src/osn_dhcp_server_dnsmasq.c
+UNIT_SRC += src/osn_dhcpv6_server_dnsmasq6.c
+UNIT_SRC += src/linux/dnsmasq6_server.c
+UNIT_SRC += src/linux/dnsmasq_server.c
+UNIT_SRC += src/osn_ip6_radv_dnsmasq6.c
+UNIT_SRC += src/osn_dhcpv6_client_odhcp6.c
+UNIT_SRC += src/osn_dhcp_client_udhcp.c
+UNIT_SRC += src/osn_ip6_linux.c
+UNIT_SRC += src/linux/lnx_ip6.c
+UNIT_SRC += src/linux/lnx_netlink.c
+UNIT_SRC += src/linux/udhcp_client.c
+UNIT_SRC += src/osn_route_linux.c
+UNIT_SRC += src/linux/lnx_route.c
+UNIT_SRC += src/osn_ip_linux.c
+UNIT_SRC += src/linux/lnx_ip.c
+UNIT_SRC += src/osn_netif_linux.c
+UNIT_SRC += src/linux/lnx_netif.c
+UNIT_SRC += src/linux/odhcp6_client.c
 UNIT_SRC += src/osn_types.c
-UNIT_SRC += src/osn_udhcpc.c
 UNIT_SRC += src/osn_fw.c
 
 UNIT_SRC_TOP := $(OVERRIDE_DIR)/src/osn_upnpd.c

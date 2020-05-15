@@ -10,3 +10,4 @@ purge:
 	rm -rf ./build
 	rm -rf ./out/*
 	@echo Done
+

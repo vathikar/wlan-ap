@@ -1095,23 +1095,53 @@ bool target_vif_config_set2(
         }
     }
 
-    return vif_state_update(ssid_index);
+    return vif_state_update(vconf->ssid, ssid_index);
 }
 
-bool vif_state_update(int ssidIndex)
+bool vif_state_update(const char *ssid, int ssid_index)
 {
+    int ret;
+    int radio_idx;
+    char radio_ifname[128];
+    char ssid_ifname[128];
+
+    memset(ssid_ifname, 0, sizeof(ssid_ifname));
+    ret = wifi_getVIFName(ssid_index, ssid_ifname, sizeof(ssid_ifname));
+    if (ret != UCI_OK)
+    {
+        LOGE("%s: cannot get ap name for index %d rc %d", __func__, ssid_index, ret);
+        return false;
+    }
+
+    ret = wifi_getSSIDRadioIndex(ssid_index, &radio_idx);
+    if (ret != UCI_OK)
+    {
+        LOGE("%s: cannot get radio idx for SSID %s\n", __func__, ssid);
+        return false;
+    }
+
+    memset(radio_ifname, 0, sizeof(radio_ifname));
+    ret = wifi_getSSIDRadioIfName(radio_idx, radio_ifname, sizeof(radio_ifname));
+    if (ret != UCI_OK)
+    {
+        LOGE("%s: cannot get radio ifname for idx %d", __func__,
+                radio_idx);
+        return false;
+    }
+
+
     struct schema_Wifi_VIF_State vstate;
 
-    if (!vif_state_get(ssidIndex, &vstate))
+    if (!vif_state_get(ssid_index, &vstate))
     {
-        LOGE("%s: cannot update VIF state for SSID index %d", __func__, ssidIndex);
+        LOGE("%s: cannot update VIF state for SSID index %d", __func__, ssid_index);
         return false;
     }
 
     system("reload_config");
 
-    LOGN("Updating VIF state for SSID index %d", ssidIndex);
-    return radio_rops_vstate(&vstate);
+    LOGN("Updating VIF state for SSID index %d", ssid_index);
+    return radio_rops_vstate(&vstate, radio_ifname);
 }
 
 

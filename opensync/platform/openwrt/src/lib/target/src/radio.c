@@ -215,7 +215,7 @@ static void radio_resync_all_task(void *arg)
         }
 #endif
 
-        if (!vif_state_update(s))
+        if (!vif_state_update(ssid_ifname, s))
         {
             LOGW("Cannot update VIF state for SSID index %d", s);
             continue;
@@ -360,7 +360,7 @@ bool target_radio_config_init2()
                 continue;
             }
             g_rops.op_vconf(&vconfig, rconfig.if_name);
-            g_rops.op_vstate(&vstate);
+            g_rops.op_vstate(&vstate, rconfig.if_name);
         }
     }
 /*
@@ -408,7 +408,7 @@ bool target_radio_config_set2(
      return radio_state_update(radioIndex);
  }
 
-bool radio_rops_vstate(struct schema_Wifi_VIF_State *vstate)
+bool radio_rops_vstate(struct schema_Wifi_VIF_State *vstate, const char *radio_ifname)
 {
     if (!g_rops.op_vstate)
     {
@@ -416,7 +416,7 @@ bool radio_rops_vstate(struct schema_Wifi_VIF_State *vstate)
         return false;
     }
 
-    g_rops.op_vstate(vstate);
+    g_rops.op_vstate(vstate, radio_ifname);
     return true;
 }
 

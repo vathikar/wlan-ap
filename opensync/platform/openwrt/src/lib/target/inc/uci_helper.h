@@ -45,14 +45,13 @@ bool wifi_setSSIDName(const char* ssidIfName, char* ssidName);
 /*
  * Functions to access OVSDB callbacks
  */
-bool radio_rops_vstate(struct schema_Wifi_VIF_State *vstate);
+bool radio_rops_vstate(struct schema_Wifi_VIF_State *vstate, const char *radio_ifname);
 bool radio_rops_vconfig( struct schema_Wifi_VIF_Config *vconf, const char *radio_ifname);
 
 /*
  *  VIF functions
  */
-
-bool vif_state_update(int ssidIndex);
+bool vif_state_update(const char *ssid, int ssid_index);
 bool vif_state_get(int ssidIndex, struct schema_Wifi_VIF_State *vstate);
 bool vif_copy_to_config(int ssidIndex, struct schema_Wifi_VIF_State *vstate, struct schema_Wifi_VIF_Config *vconf);
 
