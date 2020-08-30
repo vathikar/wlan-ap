@@ -101,7 +101,6 @@ mac80211_hostapd_setup_base() {
 	json_select config
 
 	[ "$auto_channel" -gt 0 ] && channel=acs_survey
-	[ "$auto_channel" -gt 0 ] && json_get_values channel_list channels
 
 	[ "$auto_channel" -gt 0 ] && json_get_vars acs_exclude_dfs
 	[ -n "$acs_exclude_dfs" ] && [ "$acs_exclude_dfs" -gt 0 ] &&
@@ -109,6 +108,10 @@ mac80211_hostapd_setup_base() {
 
 	json_get_vars noscan ht_coex
 	json_get_values ht_capab_list ht_capab tx_burst
+	json_get_values channel_list channels
+
+	[ "$auto_channel" = 0 ] && [ -z "$channel_list" ] && \
+		channel_list="$channel"
 
 	set_default noscan 0
 
@@ -974,8 +977,8 @@ drv_mac80211_setup() {
 		local no_reload=1
 		if [ -n "$(ubus list | grep hostapd.$primary_ap)" ]; then
 			[ "${NEW_MD5}" = "${OLD_MD5}" ] || {
-				#ubus call hostapd.$primary_ap reload
-				no_reload=1
+				ubus call hostapd.$primary_ap reload
+				no_reload=$?
 				if [ "$no_reload" != "0" ]; then
 					mac80211_vap_cleanup hostapd "${OLDAPLIST}"
 					mac80211_vap_cleanup wpa_supplicant "$(uci -q -P /var/state get wireless._${phy}.splist)"
@@ -1045,8 +1048,6 @@ list_phy_interfaces() {
 }
 
 drv_mac80211_teardown() {
-	wireless_process_kill_all
-
 	json_select data
 	json_get_vars phy
 	json_select ..
