@@ -3,25 +3,15 @@
 . /lib/functions.sh
 
 case "$(board_name)" in
-edgecore,ecw5211|\
-edgecore,ecw5410)
-	MODEL=$(cat /tmp/sysinfo/board_name | sed "s/edgecore,//" | tr [a-z] [A-Z])
-	SERIAL=$(cat /sys/class/net/eth0/address | tr -d :)
-	PLATFORM=$(cat /tmp/sysinfo/model)
-	;;
 linksys,ea8300)
 	MODEL=$(grep modelNumber= /dev/mtd9 | tr -d '\r\n' | sed "s/modelNumber=//")
 	SERIAL=$(grep serial_number= /dev/mtd9 | tr -d '\r\n' | sed "s/serial_number=//")
 	PLATFORM=OPENWRT_EA8300
 	;;
-tp-link,ap2220 |\
-tp-link,ec420-g1)
+*)
 	MODEL=$(cat /tmp/sysinfo/board_name)
 	SERIAL=$(cat /sys/class/net/eth0/address | tr -d :)
 	PLATFORM=$(cat /tmp/sysinfo/model)
-	;;
-*)
-	exit 0
 	;;
 esac
 
