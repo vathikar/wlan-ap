@@ -81,22 +81,6 @@ struct capture_storage
 
 struct capture_storage captures;
 
-/* Voice session data structures */
-struct voip_session
-{
-    uint32_t CltMacHigh;
-    uint32_t CltMacLow;
-
-    uint64_t SipSessionId;
-    unsigned int SipPort;
-    unsigned int SipState;
-    uint32_t RtpPortsFrom;
-    uint32_t RtpPortsTo;
-    uint32_t RtpVideoPortsFrom;
-    uint32_t RtpVideoPortsTo;
-    uint32_t RtpIpFrom;
-    uint32_t RtpIpTo;
-};
 
 struct voip_flow
 {
@@ -344,7 +328,6 @@ struct kmem_cache * clt_cache __read_mostly;
                                                              ((ptr->VlanMacHigh & 0xFFFF) == (addr_high & 0xFFFF))) \
                                                            ))
 
-
 //static int CltHashProt[MAC_HASH_SIZE];
 static struct clt_entry * CltMacHash[MAC_HASH_SIZE];
 
@@ -355,6 +338,7 @@ void voip_generate_report_event( struct mac_entry * HashPtr, struct net_device *
 void voip_generate_end_event( struct mac_entry * HashPtr, unsigned int Reason );
 void voip_clean_session( struct mac_entry * HashPtr );
 void voip_heuristic_flow_call_start( struct mac_entry * hash_ptr, int flow_index, int IsTcp );
+
 
 
 /*
@@ -393,7 +377,7 @@ int get_if_id(char *name) {
 static struct timer_list CmdTimer;
 static int CountTick = 0;
 
-void glue_cache_free( void * Ptr, int Type )
+void cache_free( void * Ptr, int Type )
 {
 	switch( Type )
 	{
@@ -411,7 +395,7 @@ void glue_cache_free( void * Ptr, int Type )
 
 static void mac_free_entry( struct mac_entry * del_ptr )
 {
-	glue_cache_free( (void *)del_ptr, CACHE_MAC_ENTRY );
+	cache_free( (void *)del_ptr, CACHE_MAC_ENTRY );
 }
 
 /* mac_handle_udp_flows: Determine if a udp flow could be a voip call
@@ -569,7 +553,7 @@ void cmd_timer( unsigned long _data )
 /* End MAC ageing timer */
 
 
-void glue_get_uptime( uint64_t * msec, uint64_t * usec )
+void get_uptime( uint64_t * msec, uint64_t * usec )
 {
 	struct timespec tv;
 	uint64_t Sec, Usec;
@@ -587,7 +571,7 @@ void glue_get_uptime( uint64_t * msec, uint64_t * usec )
 }
 
 /* Cache mem allocation for mac entries */
-void * glue_cache_allocate( int Type )
+void * cache_allocate( int Type )
 {
 	switch( Type )
 	{
@@ -641,7 +625,7 @@ static struct mac_entry * mac_hash_put( uint32_t addr_high, uint32_t addr_low,
 {
 
 	struct mac_entry * NewEntryPtr = NULL;
-	NewEntryPtr = (struct mac_entry *)glue_cache_allocate( CACHE_MAC_ENTRY );
+	NewEntryPtr = (struct mac_entry *)cache_allocate( CACHE_MAC_ENTRY );
 	
 	if( NewEntryPtr )
 	{
@@ -993,7 +977,7 @@ uint32_t serv_string_to_ip( char * str )
 	return( ip );
 }
 
-uint64_t glue_get_time_msec( void )
+uint64_t get_time_msec( void )
 {
 	struct timeval Time;
 	uint64_t TimeInMs, Sec;
@@ -1070,7 +1054,7 @@ unsigned int pos;
 
 	spin_unlock( &captures.Locked );
 
-	glue_get_uptime(&(captures.CaptureArray[pos].TimeStamp),
+	get_uptime(&(captures.CaptureArray[pos].TimeStamp),
 			&(captures.CaptureArray[pos].tsInUs) );
 	
 	captures.CaptureArray[pos].SessionId = SessionId;
@@ -1103,6 +1087,12 @@ unsigned int pos;
 
 	send_data(0, (void *)&captures.CaptureArray[pos],
 		  sizeof(struct capture_buf));
+}
+
+/*Send IAC event to userspace */
+void iac_send_message(void *data, unsigned int data_len) {
+	send_data(1, data, data_len);
+
 }
 
 /* Send Report event to userspace */
@@ -1261,7 +1251,7 @@ void voip_generate_end_event(struct mac_entry * HashPtr, unsigned int Reason)
 	VoipSession.RtpVideoPortsFrom = 0;
 	VoipSession.RtpVideoPortsTo   = 0;
 
-	// TODO: iac_send_message
+	iac_send_message(&VoipSession, sizeof(struct voip_session));
 
 	/* Generate event to the cloud */
 	capture_put((unsigned char *)&SipCallEnd, 0,
@@ -1598,7 +1588,7 @@ int voip_sip_packet_analyze(unsigned char * Message, unsigned char * EndPtr,
         struct voip_session VoipSession;
         int WiFiIf = 0;
 
-        HashPtr->SipSessionId = glue_get_time_msec( );
+        HashPtr->SipSessionId = get_time_msec( );
         VoipSession.SipSessionId = HashPtr->SipSessionId;
         VoipSession.CltMacHigh   = htonl( HashPtr->VlanMacHigh );
         VoipSession.CltMacLow    = htonl( HashPtr->MacLow );
@@ -1627,9 +1617,8 @@ int voip_sip_packet_analyze(unsigned char * Message, unsigned char * EndPtr,
         }
 
     	WiFiIf = get_if_id(HashPtr->port->name);
-/*
-        iac_send_message
-*/
+
+	iac_send_message(&VoipSession, sizeof(struct voip_session));
 
         voip_generate_start_event( HashPtr, VoipSession.SipSessionId, WiFiIf );
         HashPtr->SipReportSent = 2;
@@ -1805,7 +1794,7 @@ void voip_heuristic_flow_call_start(struct mac_entry * hash_ptr,
 	}
 
 	hash_ptr->SipState = CalType;
-	hash_ptr->SipSessionId = glue_get_time_msec( );
+	hash_ptr->SipSessionId = get_time_msec( );
 	
 	VoipSession.SipSessionId = hash_ptr->SipSessionId;
 	VoipSession.CltMacHigh   = htonl( hash_ptr->VlanMacHigh );
@@ -1818,7 +1807,8 @@ void voip_heuristic_flow_call_start(struct mac_entry * hash_ptr,
 	VoipSession.RtpIpTo      = hash_ptr->RtpIpTo;
 	VoipSession.RtpVideoPortsFrom = hash_ptr->RtpVideoPortsFrom;
 	VoipSession.RtpVideoPortsTo   = hash_ptr->RtpVideoPortsTo;
-	//TODO:iac_send_message
+
+	iac_send_message(&VoipSession, sizeof(struct voip_session));
 
 	if( hashEntry )
 	{
@@ -2052,11 +2042,72 @@ static int genl_ucc_rx_msg(struct sk_buff* skb, struct genl_info* info)
 	return 0;
 }
 
+void voip_get_update(struct voip_session *VoipSession)
+{
+	uint32_t MacHigh = ntohl(VoipSession->CltMacHigh);
+	uint32_t MacLow = ntohl(VoipSession->CltMacLow);
+
+	struct packet DummyPkt;
+
+	mac_hash_search(&DummyPkt, MacHigh, MacLow);
+	if( DummyPkt.HashDst )
+	{
+	/* If we already have MAC entry - it can happen if client roamed
+	from this AP to another and ended VoIP call there */
+
+		struct mac_entry *mac_hash_ptr = DummyPkt.HashDst;
+
+		mac_hash_ptr->SipSessionId = VoipSession->SipSessionId;
+		mac_hash_ptr->SipPort = VoipSession->SipPort;
+		mac_hash_ptr->SipState = VoipSession->SipState;
+		mac_hash_ptr->RtpPortsFrom = VoipSession->RtpPortsFrom;
+		mac_hash_ptr->RtpPortsTo = VoipSession->RtpPortsTo;
+		mac_hash_ptr->RtpVideoPortsFrom = VoipSession->RtpVideoPortsFrom;
+		mac_hash_ptr->RtpVideoPortsTo = VoipSession->RtpVideoPortsTo;
+		mac_hash_ptr->RtpIpFrom = VoipSession->RtpIpFrom;
+		mac_hash_ptr->RtpIpTo = VoipSession->RtpIpTo;
+		mac_hash_ptr->SipReportIndex = 0;
+        }
+
+	printk("Got voip update from (%x %x) id:%lld port:%d state=%d\n",
+						VoipSession->CltMacHigh,
+						VoipSession->CltMacLow,
+						VoipSession->SipSessionId,
+						VoipSession->SipPort,
+						VoipSession->SipState);
+
+}
+
+static int genl_ucc_intaprx_msg(struct sk_buff* skb, struct genl_info* info)
+{
+	struct voip_session *data;
+
+	if (!info->attrs[GENL_UCC_ATTR_INTAP_MSG]) {
+		printk(KERN_ERR "empty message from %d!!\n",
+			info->snd_portid);
+		printk(KERN_ERR "%p\n", info->attrs[GENL_UCC_ATTR_INTAP_MSG]);
+		return -EINVAL;
+	}
+
+	data =	(struct voip_session *)nla_data(info->attrs[GENL_UCC_ATTR_INTAP_MSG]);
+
+	voip_get_update(data);
+
+	return 0;
+}
+
+
 static const struct genl_ops genl_ucc_ops[] = {
 	{
 		.cmd = GENL_UCC_C_MSG,
 		.policy = genl_ucc_policy,
 		.doit = genl_ucc_rx_msg,
+		.dumpit = NULL,
+	},
+	{
+		.cmd = GENL_UCC_INTAP_MSG,
+		.policy = genl_intap_policy,
+		.doit = genl_ucc_intaprx_msg,
 		.dumpit = NULL,
 	},
 };
@@ -2123,6 +2174,25 @@ int netlink_init(void)
 	return (genl_register_family(&genl_ucc_family));
 }
 
+#if 0
+static struct timer_list timer;
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(4,14,0)
+void genl_ucc_periodic(unsigned long data)
+#else
+void genl_ucc_periodic(struct timer_list *unused)
+#endif
+{
+	struct ex data;
+	data.x = 3001;
+	data.y = 'W';
+	data.z = 4001;
+	printk("Kernel->: O");
+	iac_send_message(&data, sizeof(struct ex));
+
+	mod_timer(&timer, jiffies + msecs_to_jiffies(GENL_UCC_HELLO_INTERVAL));
+}
+#endif
+
 int init_module()
 {
 	if (netlink_init())
@@ -2155,6 +2225,20 @@ int init_module()
 	ageing_time = 300;
 	setup_timer( &CmdTimer, cmd_timer, (unsigned long)0 );
 	mod_timer( &CmdTimer, jiffies + HZ );
+
+#if 0 //Periodic send data
+#if LINUX_VERSION_CODE <= KERNEL_VERSION(4,14,0)
+	init_timer(&timer);
+	timer.data = 0;
+	timer.function = genl_ucc_periodic;
+	timer.expires = jiffies + msecs_to_jiffies(GENL_UCC_HELLO_INTERVAL);
+	add_timer(&timer);
+#else
+	timer_setup(&timer, genl_ucc_periodic, 0);
+	mod_timer(&timer, jiffies + msecs_to_jiffies(GENL_UCC_HELLO_INTERVAL));
+#endif
+#endif
+
 	
 	return 0;
 }
@@ -2162,7 +2246,7 @@ int init_module()
 void cleanup_module()
 {
 	del_timer_sync( &CmdTimer );
-
+//	del_timer_sync(&timer);
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,13,0)
 	nf_unregister_net_hook(&init_net, &nfho);
 #else
