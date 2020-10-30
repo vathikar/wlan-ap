@@ -7,5 +7,6 @@ config OPENSYNC_TARGET
 	help
 		Valid targets are,
 		TIP - OpenSync with NETIFD manager (TIP default)
+		USE_NM2 - OpenSync with NM2 manager (OpenSync default)
 
 endmenu

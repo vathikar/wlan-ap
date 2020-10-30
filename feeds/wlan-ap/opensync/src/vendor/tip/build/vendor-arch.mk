@@ -1,8 +1,9 @@
 OS_TARGETS +=TIP
+OS_TARGETS +=USE_NM2
 
 TARGET ?= $(DEFAULT_TARGET)
 
-ifneq ($(filter TIP,$(TARGET)),)
+ifneq ($(filter TIP USE_NM2,$(TARGET)),)
 PLATFORM=openwrt
 VENDOR=tip
 PLATFORM_DIR := platform/$(PLATFORM)
