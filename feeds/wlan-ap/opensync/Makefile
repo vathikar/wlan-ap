@@ -60,7 +60,7 @@ TARGET_LDFLAGS += -Wl,--gc-sections
 
 MAKE_FLAGS := \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	TARGET=tip TOOLCHAIN_DIR="$(TOOLCHAIN_DIR)" \
+	TARGET=TIP TOOLCHAIN_DIR="$(TOOLCHAIN_DIR)" \
 	TOOLCHAIN_PREFIX="$(TARGET_CROSS)" \
 	NO_RDYNAMIC=1
 
@@ -83,10 +83,10 @@ define Package/opensync/install
 	$(CP) ./files/* $(1)
 	$(INSTALL_DIR) $(1)/usr/opensync/{bin,etc,certs}
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/tip/rootfs/usr/opensync/bin/* $(1)/usr/opensync/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/tip/rootfs/usr/opensync/etc/* $(1)/usr/opensync/etc
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/tip/rootfs/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
-	$(MAKE) -C $(PKG_BUILD_DIR)/ TARGET=tip rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/bin/* $(1)/usr/opensync/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/etc/* $(1)/usr/opensync/etc
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
+	$(MAKE) -C $(PKG_BUILD_DIR)/ TARGET=TIP rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
 ifdef CONFIG_PACKAGE_wlan-ap-keys
 	rm -f $(1)/usr/opensync/certs/*
 endif
