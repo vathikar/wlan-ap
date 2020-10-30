@@ -1,0 +1,11 @@
+menu "Opensync configuration"
+	depends on PACKAGE_opensync
+
+config OPENSYNC_TARGET
+	string "OpenSync vendor target"
+	default TIP
+	help
+		Valid targets are,
+		TIP - OpenSync with NETIFD manager (TIP default)
+
+endmenu

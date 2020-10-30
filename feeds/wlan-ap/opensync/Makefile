@@ -42,6 +42,10 @@ define Package/opensync/conffiles
 /usr/opensync/certs/
 endef
 
+define Package/opensync/config
+	source "$(SOURCE)/Config.in"
+endef
+
 define Build/Prepare
 	$(PKG_UNPACK)
 	rm $(PKG_BUILD_DIR)/{vendor,platform}
@@ -49,6 +53,9 @@ define Build/Prepare
 	[ ! -d ./src/ ] || $(CP) ./src/. $(PKG_BUILD_DIR)
 	$(Build/Patch)
 endef
+
+TARGET:=TARGET=$(CONFIG_OPENSYNC_TARGET)
+OPENSYNC_ROOTFS:=work/$(CONFIG_OPENSYNC_TARGET)/rootfs/
 
 TARGET_CFLAGS += \
 	-I$(STAGING_DIR)/usr/include \
@@ -60,7 +67,7 @@ TARGET_LDFLAGS += -Wl,--gc-sections
 
 MAKE_FLAGS := \
 	LDFLAGS="$(TARGET_LDFLAGS)" \
-	TARGET=TIP TOOLCHAIN_DIR="$(TOOLCHAIN_DIR)" \
+	$(TARGET) TOOLCHAIN_DIR="$(TOOLCHAIN_DIR)" \
 	TOOLCHAIN_PREFIX="$(TARGET_CROSS)" \
 	NO_RDYNAMIC=1
 
@@ -83,10 +90,10 @@ define Package/opensync/install
 	$(CP) ./files/* $(1)
 	$(INSTALL_DIR) $(1)/usr/opensync/{bin,etc,certs}
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/bin/* $(1)/usr/opensync/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/etc/* $(1)/usr/opensync/etc
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/work/TIP/rootfs/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
-	$(MAKE) -C $(PKG_BUILD_DIR)/ TARGET=TIP rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/bin/* $(1)/usr/opensync/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/etc/* $(1)/usr/opensync/etc
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
+	$(MAKE) -C $(PKG_BUILD_DIR)/ $(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
 ifdef CONFIG_PACKAGE_wlan-ap-keys
 	rm -f $(1)/usr/opensync/certs/*
 endif
