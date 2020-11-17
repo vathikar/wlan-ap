@@ -1,6 +1,13 @@
 menu "Opensync configuration"
 	depends on PACKAGE_opensync
 
+config OPENSYNC_PLATFORM
+	string "OpenSync platform"
+	default openwrt
+	help
+		openwrt - TIP default
+		cfg80211 - CFG80211 target layer support
+
 config OPENSYNC_TARGET
 	string "OpenSync vendor target"
 	default TIP
