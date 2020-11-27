@@ -1,0 +1,13 @@
+--- a/src/nm2/unit.mk
++++ b/src/nm2/unit.mk
+@@ -27,8 +27,8 @@
+ # Network manager
+ #
+ ###############################################################################
+-UNIT_DISABLE := y
+-#$(if $(CONFIG_MANAGER_NM),n,y)
++
++UNIT_DISABLE := $(if $(CONFIG_MANAGER_NM),n,y)
+ 
+ UNIT_NAME := nm
+ 
