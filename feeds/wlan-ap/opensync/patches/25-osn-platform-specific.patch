@@ -1,0 +1,34 @@
+--- a/src/lib/osn/kconfig/Kconfig.osn
++++ b/src/lib/osn/kconfig/Kconfig.osn
+@@ -233,3 +233,11 @@ if OSN_LINUX_ENABLED
+         endif
+ endif
+ 
++menuconfig OSN_PLATFORM_SPECIFIC
++    bool "Platform Specific Implementation"
++    default n
++    help
++        Platform specific implementation of OSN API.
++            This prevents from providing common implemetation, thus keeping place
++            for platform specific implementations like OpenWrt UCI for TIP.
++
+--- a/src/lib/osn/unit.mk
++++ b/src/lib/osn/unit.mk
+@@ -39,6 +39,8 @@ UNIT_CFLAGS += -I$(UNIT_PATH)/src
+ UNIT_SRC += src/osn_fw.c
+ UNIT_SRC += src/osn_types.c
+ 
++ifndef CONFIG_OSN_PLATFORM_SPECIFIC
++
+ UNIT_SRC += $(if $(CONFIG_OSN_BACKEND_NETIF_NULL),src/osn_netif_null.c)
+ UNIT_SRC += $(if $(CONFIG_OSN_BACKEND_NETIF_LINUX),src/osn_netif_linux.c)
+ 
+@@ -89,6 +91,8 @@ UNIT_DEPS += src/lib/ds
+ UNIT_DEPS += src/lib/execsh
+ endif
+ 
++endif
++
+ UNIT_EXPORT_CFLAGS := -I$(UNIT_PATH)/inc
+ 
+ UNIT_DEPS += src/lib/log
