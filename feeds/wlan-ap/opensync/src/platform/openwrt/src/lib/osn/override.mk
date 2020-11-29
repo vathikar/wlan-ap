@@ -28,4 +28,22 @@
 #
 ##############################################################################
 
-UNIT_SRC_TOP := $(OVERRIDE_DIR)/src/osn_upnpd.c
+
+# temporarily ignore the new osn_upnpd.c to prevent duplicate symbols linker
+# errors that happen when osn null is selected instead of linux
+# UNIT_SRC_TOP := $(OVERRIDE_DIR)/src/osn_upnpd.c
+
+ifdef CONFIG_OSN_UCI_ENABLED
+
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_netif_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_ip_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_route_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_dhcp_client_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_dhcp_server_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_upnp_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_ip6_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_dhcpv6_client_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_dhcpv6_server_uci.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/osn_ip6_radv_uci.c
+
+endif
