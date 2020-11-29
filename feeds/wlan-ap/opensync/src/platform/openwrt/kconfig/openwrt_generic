@@ -3,3 +3,22 @@ CONFIG_MANAGER_LM=y
 CONFIG_MANAGER_SM=y
 CONFIG_MANAGER_UM=y
 CONFIG_INET_DHSNIFF_PCAP=y
+
+#
+# Networking (OSN)
+#
+CONFIG_OSN_PLATFORM_SPECIFIC=y
+# end of Networking (OSN)
+
+
+#
+# Platform Configuration
+#
+CONFIG_PLATFORM_IS_OPENWRT=y
+
+#
+# OSN API
+#
+CONFIG_OSN_UCI_ENABLED=y
+CONFIG_OSN_UCI_IP=y
+# end of Platform Configuration

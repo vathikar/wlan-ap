@@ -1,0 +1,28 @@
+menuconfig OSN_UCI_ENABLED
+    bool "OpenWrt UCI Implementation"
+    help
+        Provide an OpenWrt UCI implementation of the OSN API. This includes:
+            - Linux L2 interface support (via ioctl())
+            - IPv4 support (via iproute2)
+            - IPv6 support (via iproute2)
+            - DHCPv4 server support (via dnsmasq)
+            - DHCPv4 client support (via udhcpc)
+            - DHCPv6 server support (via dnsmasq)
+            - DHCPv6 client support (via odhcp6c)
+            - Router Advertisement support (via dnsmasq)
+            - UPnP support (via miniupnpd)
+            - PPPoE support (via pppd)
+            - VLAN support (via iproute2)
+            - QoS support (via tc)
+
+if OSN_UCI_ENABLED
+
+    config OSN_UCI_IP
+        bool "OpenWrt UCI IPv4"
+        help
+            OpenSync IPv4 implementation (OpenWrt UCI)
+
+            This option implements the uci_ip API and enables the
+            "UCI_IPv4" backend (osn_ip).
+
+endif

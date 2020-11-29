@@ -1,0 +1,11 @@
+menuconfig PLATFORM_IS_OPENWRT
+    bool "OpenWrt"
+    help
+        Support for OpenWrt UCI
+
+if PLATFORM_IS_OPENWRT
+
+comment "OSN API"
+rsource "../src/lib/osn/kconfig/Kconfig.osn"
+
+endif

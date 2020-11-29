@@ -1,0 +1,6 @@
+config OSN_BACKEND_IPV4_UCI
+    bool "UCI"
+    select OSN_UCI_ENABLED
+    select OSN_UCI_IP
+    help
+        Use the UCI IPv4 backend provided by OpenSync/TIP
