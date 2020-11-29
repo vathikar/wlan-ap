@@ -1,0 +1,32 @@
+--- a/src/nm2/src/nm2_inet_config.c
++++ b/src/nm2/src/nm2_inet_config.c
+@@ -1061,16 +1061,19 @@ void callback_Wifi_Inet_Config(
+     struct nm2_iface *piface = NULL;
+ 
+     TRACE();
+-
++    LOGI("osn-owrt: in wifi_inet_config cb");
+     switch(mon->mon_type)
+     {
+         case OVSDB_UPDATE_NEW:
++            LOGI("osn-owrt: update new if_name: %s, if_type: %s", iconf->if_name, iconf->if_type);
+             piface = nm2_add_inet_conf(iconf);
+             break;
+         case OVSDB_UPDATE_DEL:
++            LOGI("osn-owrt: update delete if_name: %s, if_type: %s", old_rec->if_name, old_rec->if_type);
+             nm2_del_inet_conf(old_rec);
+             break;
+         case OVSDB_UPDATE_MODIFY:
++            LOGI("osn-owrt: update modify if_name: %s, if_type: %s", iconf->if_name, iconf->if_type);
+             piface = nm2_modify_inet_conf(iconf);
+             break;
+         default:
+@@ -1080,7 +1083,7 @@ void callback_Wifi_Inet_Config(
+     if (mon->mon_type == OVSDB_UPDATE_NEW ||
+         mon->mon_type == OVSDB_UPDATE_MODIFY)
+     {
+-
++        LOGI("nm2_iface: %s", piface->if_name);
+         if(!piface)
+         {
+             LOG(ERR, "callback_Wifi_Inet_Config: Couldn't get the interface(%s)",
