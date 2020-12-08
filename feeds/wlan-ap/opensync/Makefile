@@ -31,7 +31,7 @@ define Package/opensync
 	CATEGORY := Network
 	TITLE    := cloud network management system
 	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
-	DEPENDS  += +libnl +@BUSYBOX_CONFIG_TIMEOUT
+	DEPENDS  += +libnl +@BUSYBOX_CONFIG_TIMEOUT +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils
 endef
 
 define Package/opensync/description
