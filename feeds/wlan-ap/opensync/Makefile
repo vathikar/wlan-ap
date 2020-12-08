@@ -28,9 +28,10 @@ define Host/Clean
 endef
 
 define Package/opensync
-	CATEGORY:=Network
-	TITLE:=cloud network management system
-	DEPENDS:=+libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libnl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
+	CATEGORY := Network
+	TITLE    := cloud network management system
+	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
+	DEPENDS  += +libnl +@BUSYBOX_CONFIG_TIMEOUT
 endef
 
 define Package/opensync/description
