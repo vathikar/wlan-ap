@@ -23,6 +23,9 @@ esac
 
 MODEL=$(echo $MODEL | sed "s/.*,//" | tr [a-z] [A-Z])
 
+# convert MR8300-EU to MR8300-AH as cloud controller config is missing for the EU for now
+MODEL=$(echo $MODEL | sed "s/MR8300-EU/MR8300-AH/")
+
 uci set system.tip=tip
 uci set system.tip.serial="${SERIAL}"
 uci set system.tip.model="${MODEL}"
