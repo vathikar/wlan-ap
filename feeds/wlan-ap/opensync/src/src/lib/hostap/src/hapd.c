@@ -322,6 +322,36 @@ hapd_map_int2str(int i)
 }
 
 static int
+hapd_11n_enabled(const struct schema_Wifi_Radio_Config *rconf)
+{
+    if (!rconf->hw_mode_exists) return 0;
+    if ((!strcmp(rconf->hw_mode, "11ax"))
+        || (!strcmp(rconf->hw_mode, "11ac"))
+        || (!strcmp(rconf->hw_mode, "11n")))
+        return 1;
+    return 0;
+}
+
+static int
+hapd_11ac_enabled(const struct schema_Wifi_Radio_Config *rconf)
+{
+    if (!rconf->hw_mode_exists) return 0;
+    if ((!strcmp(rconf->hw_mode, "11ax"))
+        || (!strcmp(rconf->hw_mode, "11ac")))
+        return 1;
+    return 0;
+}
+
+static int
+hapd_11ax_enabled(const struct schema_Wifi_Radio_Config *rconf)
+{
+    if (!rconf->hw_mode_exists) return 0;
+    if (!strcmp(rconf->hw_mode, "11ax"))
+        return 1;
+    return 0;
+}
+
+static int
 hapd_conf_gen_psk(struct hapd *hapd,
                   const struct schema_Wifi_VIF_Config *vconf)
 {
@@ -411,6 +441,12 @@ hapd_conf_gen(struct hapd *hapd,
     csnprintf(&buf, &len, "wmm_enabled=1\n");
     csnprintf(&buf, &len, "%s", hapd->respect_multi_ap ? "" : "#");
     csnprintf(&buf, &len, "multi_ap=%d\n", hapd_map_str2int(vconf));
+    csnprintf(&buf, &len, "%s", hapd->ieee80211n ? "" : "#");
+    csnprintf(&buf, &len, "ieee80211n=%d\n", hapd_11n_enabled(rconf));
+    csnprintf(&buf, &len, "%s", hapd->ieee80211ac ? "" : "#");
+    csnprintf(&buf, &len, "ieee80211ac=%d\n", hapd_11ac_enabled(rconf));
+    csnprintf(&buf, &len, "%s", hapd->ieee80211ax ? "" : "#");
+    csnprintf(&buf, &len, "ieee80211ax=%d\n", hapd_11ax_enabled(rconf));
 
     /* FIXME: ieee80211n, iee80211ac, ieee80211ax is missing, also min_hw_mode..
      * perhaps some of this needs to be scheduled for wireless api rework
