@@ -447,6 +447,7 @@ hapd_conf_gen(struct hapd *hapd,
     csnprintf(&buf, &len, "ieee80211ac=%d\n", hapd_11ac_enabled(rconf));
     csnprintf(&buf, &len, "%s", hapd->ieee80211ax ? "" : "#");
     csnprintf(&buf, &len, "ieee80211ax=%d\n", hapd_11ax_enabled(rconf));
+    csnprintf(&buf, &len, "uapsd_advertisement_enabled=%d\n", vconf->uapsd_enable);
 
     /* FIXME: ieee80211n, iee80211ac, ieee80211ax is missing, also min_hw_mode..
      * perhaps some of this needs to be scheduled for wireless api rework
@@ -677,6 +678,8 @@ hapd_bss_get(struct hapd *hapd,
         SCHEMA_SET_STR(vstate->multi_ap, hapd_map_int2str(atoi(p)));
     if ((vstate->ssid_broadcast_exists = (p = ini_geta(conf, "ignore_broadcast_ssid"))))
         SCHEMA_SET_STR(vstate->ssid_broadcast, atoi(p) ? "disabled" : "enabled");
+    if ((vstate->uapsd_enable_exists = (p = ini_geta(conf, "uapsd_advertisement_enabled"))))
+        vstate->uapsd_enable = atoi(p);
 
     if (status) {
         hapd_bss_get_security(vstate, conf, status);
