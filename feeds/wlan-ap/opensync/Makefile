@@ -31,7 +31,7 @@ define Package/opensync
 	CATEGORY := Network
 	TITLE    := cloud network management system
 	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +libradiusclient +libwebsocket +hostapd
-	DEPENDS  += +libnl +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils +@PACKAGE_ip-full +ip
+	DEPENDS  += +libnl +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils
 	DEPENDS  += +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_UDHCPD +@BUSYBOX_CONFIG_TIMEOUT +@BUSYBOX_CONFIG_IPROUTE +@BUSYBOX_CONFIG_IPROUTE_DIR:/etc/iproute2
 	DEPENDS  += +@BUSYBOX_DEFAULT_INETD +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_ECHO +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_DISCARD +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_TIME
 	DEPENDS  += +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_DAYTIME +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_CHARGEN +@BUSYBOX_DEFAULT_FEATURE_INETD_RPC
