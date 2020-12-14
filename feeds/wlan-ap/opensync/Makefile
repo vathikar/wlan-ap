@@ -30,8 +30,11 @@ endef
 define Package/opensync
 	CATEGORY := Network
 	TITLE    := cloud network management system
-	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
-	DEPENDS  += +libnl +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_TIMEOUT +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils +@BUSYBOX_CONFIG_UDHCPD
+	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +libradiusclient +libwebsocket +hostapd
+	DEPENDS  += +libnl +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils +@PACKAGE_ip-full +ip
+	DEPENDS  += +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_UDHCPD +@BUSYBOX_CONFIG_TIMEOUT +@BUSYBOX_CONFIG_IPROUTE +@BUSYBOX_CONFIG_IPROUTE_DIR:/etc/iproute2
+	DEPENDS  += +@BUSYBOX_DEFAULT_INETD +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_ECHO +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_DISCARD +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_TIME
+	DEPENDS  += +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_DAYTIME +@BUSYBOX_DEFAULT_FEATURE_INETD_SUPPORT_BUILTIN_CHARGEN +@BUSYBOX_DEFAULT_FEATURE_INETD_RPC
 endef
 
 define Package/opensync/description
@@ -105,6 +108,8 @@ define Package/opensync/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/lib/* $(1)/usr/lib
 	$(MAKE) -C $(PKG_BUILD_DIR)/ $(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
+	$(CP) $(STAGING_DIR)/root-ipq40xx/usr/libexec/ip-full $(BUILD_DIR)/root-ipq40xx/usr/sbin/ip
+	$(CP) $(STAGING_DIR)/root-ipq40xx/usr/lib/libelf.so.1 $(BUILD_DIR)/root-ipq40xx/usr/lib/libelf.so.1
 ifdef CONFIG_PACKAGE_wlan-ap-keys
 	rm -f $(1)/usr/opensync/certs/*
 endif
