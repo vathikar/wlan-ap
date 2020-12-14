@@ -40,6 +40,8 @@ struct hapd {
     int ieee80211n;
     int ieee80211ac;
     int ieee80211ax;
+    char htcaps[256];
+    char vhtcaps[512];
     void (*sta_connected)(struct hapd *hapd, const char *mac, const char *keyid);
     void (*sta_disconnected)(struct hapd *hapd, const char *mac);
     void (*ap_enabled)(struct hapd *hapd);
