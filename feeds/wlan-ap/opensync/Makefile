@@ -102,8 +102,6 @@ define Package/opensync/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/etc/* $(1)/usr/opensync/etc
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/tools/ovsh $(1)/usr/opensync/bin
 	$(MAKE) -C $(PKG_BUILD_DIR)/ $(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
-	$(CP) $(STAGING_DIR)/root-ipq40xx/usr/libexec/ip-full $(BUILD_DIR)/root-ipq40xx/usr/sbin/ip
-	$(CP) $(STAGING_DIR)/root-ipq40xx/usr/lib/libelf.so.1 $(BUILD_DIR)/root-ipq40xx/usr/lib/libelf.so.1
 ifdef CONFIG_PACKAGE_wlan-ap-keys
 	rm -f $(1)/usr/opensync/certs/*
 endif
