@@ -51,7 +51,11 @@ define Build/Prepare
 	$(PKG_UNPACK)
 	rm $(PKG_BUILD_DIR)/{vendor,platform}
 	mkdir $(PKG_BUILD_DIR)/core
-	[ ! -d ./src/ ] || $(CP) ./src/. $(PKG_BUILD_DIR)
+	[ ! -d ./src/ ] || $(CP) ./src/src/. $(PKG_BUILD_DIR)/src/
+	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
+	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
+	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
+	rm -rf $(PKG_BUILD_DIR)/vendor/plume-openwrt/.git
 	$(Build/Patch)
 	cp $(BUILD_DIR)/hostapd-wpad-full-openssl/hostapd-2020-06-08-5a8b3662/src/utils/os_unix.o $(STAGING_DIR)/usr/lib/
 	cp $(BUILD_DIR)/hostapd-wpad-full-openssl/hostapd-2020-06-08-5a8b3662/src/common/wpa_ctrl.o $(STAGING_DIR)/usr/lib/
