@@ -30,7 +30,7 @@ endef
 define Package/opensync
 	CATEGORY:=Network
 	TITLE:=cloud network management system
-	DEPENDS:=+libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libnl-tiny +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket
+	DEPENDS:=+libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libnl-tiny +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
 endef
 
 define Package/opensync/description
@@ -56,6 +56,9 @@ define Build/Prepare
 	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
 	rm -rf $(PKG_BUILD_DIR)/vendor/plume-openwrt/.git
 	$(Build/Patch)
+	cp $(BUILD_DIR)/hostapd-wpad-full-openssl/hostapd-2020-06-08-5a8b3662/src/utils/os_unix.o $(STAGING_DIR)/usr/lib/
+	cp $(BUILD_DIR)/hostapd-wpad-full-openssl/hostapd-2020-06-08-5a8b3662/src/common/wpa_ctrl.o $(STAGING_DIR)/usr/lib/
+	cp $(BUILD_DIR)/hostapd-wpad-full-openssl/hostapd-2020-06-08-5a8b3662/src/common/wpa_ctrl.h $(STAGING_DIR)/usr/include/
 endef
 
 TARGET:=TARGET=$(CONFIG_OPENSYNC_TARGET)
@@ -84,7 +87,7 @@ define Build/Compile
 	$(CP) $(PKG_BUILD_DIR)/src/lib/datapipeline/inc/opensync_stats.pb-c.c $(PKG_BUILD_DIR)/src/lib/datapipeline/src
 	$(RM) $(PKG_BUILD_DIR)/src/lib/datapipeline/inc/opensync_stats.pb-c.c
 
-	$(MAKE) -C $(PKG_BUILD_DIR) \
+	$(MAKE) -C $(PKG_BUILD_DIR) V=1 \
 		OWRT_CFLAGS="$(TARGET_CFLAGS)" \
 		$(MAKE_FLAGS)
 	$(MAKE) -C $(PKG_BUILD_DIR) rootfs \
