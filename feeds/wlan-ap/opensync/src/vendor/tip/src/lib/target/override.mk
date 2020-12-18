@@ -1,4 +1,4 @@
-UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/entity.c
+UNIT_SRC_TOP += $(OVERRIDE_DIR)/src/target_$(TARGET).c
 UNIT_CFLAGS  += -I$(OVERRIDE_DIR)/inc
 UNIT_LDFLAGS  = -luci -lubox
 UNIT_EXPORT_CFLAGS  := $(UNIT_CFLAGS)
