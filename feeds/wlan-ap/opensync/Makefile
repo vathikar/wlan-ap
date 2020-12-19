@@ -51,7 +51,6 @@ define Build/Prepare
 	$(PKG_UNPACK)
 	rm $(PKG_BUILD_DIR)/{vendor,platform}
 	mkdir $(PKG_BUILD_DIR)/core
-	[ ! -d ./src/ ] || $(CP) ./src/src/. $(PKG_BUILD_DIR)/src/
 	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
 	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
 	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
