@@ -29,6 +29,9 @@ choice
 	config TIP_KEY_LOCAL
 	bool "Local Developer"
 
+	config TIP_KEY_NONE
+	bool "None"
+
 endchoice
 endmenu
 endef
@@ -43,6 +46,7 @@ endef
 Build/Compile = $(Build/Compile/Default)
 
 define Package/wlan-ap-keys/install
+ifneq ($(CONFIG_TIP_KEY_NONE),y)
 	$(INSTALL_DIR) $(1)/usr/opensync/certs/
 ifeq ($(CONFIG_TIP_KEY_DEFAULT),y)
 	$(INSTALL_DATA) ./files/* $(1)/usr/opensync/certs/
@@ -51,6 +55,7 @@ ifeq ($(CONFIG_TIP_KEY_LOCAL),y)
 	$(INSTALL_DATA) $(TOPDIR)/../keys/cacert.pem $(1)/usr/opensync/certs/ca.pem
 	$(INSTALL_DATA) $(TOPDIR)/../keys/clientcert.pem $(1)/usr/opensync/certs/client.pem
 	$(INSTALL_DATA) $(TOPDIR)/../keys/clientkey_dec.pem $(1)/usr/opensync/certs/client_dec.key
+endif
 endif
 endef
 
