@@ -49,8 +49,9 @@ endef
 
 define Build/Prepare
 	$(PKG_UNPACK)
-	rm $(PKG_BUILD_DIR)/{vendor,platform}
+	rm $(PKG_BUILD_DIR)/{vendor,platform,service-provider}
 	mkdir $(PKG_BUILD_DIR)/core
+	[ ! -d ./src/service-provider/ ] || $(CP) ./src/service-provider/. $(PKG_BUILD_DIR)/service-provider/
 	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
 	git clone --single-branch --branch plume/cfg80211_dev git@github.com:plume-design/device-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
 	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
