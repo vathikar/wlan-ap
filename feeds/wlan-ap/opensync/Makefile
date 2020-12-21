@@ -107,7 +107,9 @@ define Package/opensync/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/lib/* $(1)/usr/lib
 	$(MAKE) -C $(PKG_BUILD_DIR)/ $(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
 ifdef CONFIG_PACKAGE_wlan-ap-keys
+ifneq ($(CONFIG_TIP_KEY_NONE),y)
 	rm -f $(1)/usr/opensync/certs/*
+endif
 endif
 endef
 
