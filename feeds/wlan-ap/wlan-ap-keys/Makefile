@@ -29,6 +29,9 @@ choice
 	config TIP_KEY_LOCAL
 	bool "Local Developer"
 
+	config TIP_KEY_NONE
+	bool "None"
+
 endchoice
 endmenu
 endef
