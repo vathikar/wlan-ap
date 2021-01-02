@@ -32,6 +32,7 @@ define Package/opensync
 	TITLE    := cloud network management system
 	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +libradiusclient +libwebsocket +hostapd
 	DEPENDS  += +libnl +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_TIMEOUT +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils +@BUSYBOX_CONFIG_UDHCPD +@PACKAGE_ip-full +@BUSYBOX_CONFIG_LOGGER
+	DEPENDS  += +libmnl +mxml
 endef
 
 define Package/opensync/description
