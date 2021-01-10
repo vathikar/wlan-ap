@@ -16,6 +16,12 @@ Next we need to select the profile and base package selection. This setup will i
 cd openwrt
 ./scripts/gen_config.py ap2220 wlan-ap wifi
 ```
+For trying out cfg80211 on ea8300 with Plume cloud, take wlan-ext instead of wlan-ap.   
+Note you will need to obtain some certificates and keys from Plume additionally.  
+```
+cd openwrt
+./scripts/gen_config.py ea8300 wlan-ext wifi
+```
 If you want to build an AX image you need to setup a different config. The available profiles are hawkeye, cypress, wallaby.
 ```
 cd openwrt
