@@ -20,7 +20,7 @@ For trying out consumer cfg80211 on ea8300 with Plume cloud, take wlan-ap-consum
 Note you will need to obtain some certificates and keys from Plume additionally.  
 ```
 cd openwrt
-./scripts/gen_config.py ea8300 wlan-ext wifi
+./scripts/gen_config.py ea8300 wlan-ap-consumer wifi
 ```
 If you want to build an AX image you need to setup a different config. The available profiles are hawkeye, cypress, wallaby.
 ```
