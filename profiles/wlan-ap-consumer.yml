@@ -1,8 +1,8 @@
 ---
-description: Add the wlan-ext dependencies
+description: Add the wlan-ap-consumer dependencies
 feeds:
-  - name: wlan_ext
-    path: ../../feeds/wlan-ext
+  - name: wlan_ap_consumer
+    path: ../../feeds/wlan-ap-consumer
 
 packages:
   - cgi-io
