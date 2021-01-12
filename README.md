@@ -16,8 +16,7 @@ Next we need to select the profile and base package selection. This setup will i
 cd openwrt
 ./scripts/gen_config.py ap2220 wlan-ap wifi
 ```
-For trying out consumer cfg80211 on ea8300 with Plume cloud, take wlan-ap-consumer instead of wlan-ap.   
-Note you will need to obtain some certificates and keys from Plume additionally.  
+For consumer TIP product and services, use wlan-ap-consumer instead of wlan-ap.
 ```
 cd openwrt
 ./scripts/gen_config.py ea8300 wlan-ap-consumer wifi
