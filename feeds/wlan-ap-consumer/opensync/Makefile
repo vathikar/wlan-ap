@@ -30,7 +30,7 @@ endef
 define Package/opensync
 	CATEGORY := Network
 	TITLE    := cloud network management system
-	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +hostapd
+	DEPENDS  := +libev +jansson +protobuf +libprotobuf-c +libmosquitto +libopenssl +openvswitch +libpcap +libuci +libcurl +libubus +libblobmsg-json +tcpdump +curl +lldpd +wlan-ap-keys +hostapd
 	DEPENDS  += +libnl +@BUSYBOX_CUSTOM +@BUSYBOX_CONFIG_TIMEOUT +@PACKAGE_wpa-cli +@PACKAGE_hostapd-utils +@BUSYBOX_CONFIG_UDHCPD +@PACKAGE_ip-full +@BUSYBOX_CONFIG_LOGGER
 	DEPENDS  += +libmnl +mxml
 endef
@@ -38,6 +38,10 @@ endef
 define Package/opensync/description
 	OpenSync is a cloud-agnostic software for the delivery, curation, and management of services for the modern home.
 	For more info please visit: https://opensync.io
+endef
+
+define Package/opensync/conffiles
+/usr/opensync/certs/
 endef
 
 define Package/opensync/config
@@ -105,6 +109,11 @@ define Package/opensync/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/tools/ovsh $(1)/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/$(OPENSYNC_ROOTFS)/usr/opensync/lib/* $(1)/usr/lib
 	$(MAKE) -C $(PKG_BUILD_DIR)/ $(TARGET) rootfs-copy-only INSTALL_ROOTFS_DIR=$(1)
+ifdef CONFIG_PACKAGE_wlan-ap-keys
+ifneq ($(CONFIG_TIP_KEY_NONE),y)
+	rm -f $(1)/usr/opensync/certs/*
+endif
+endif
 endef
 
 $(eval $(call HostBuild))
