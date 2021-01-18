@@ -49,8 +49,8 @@ define Build/Prepare
 	rm $(PKG_BUILD_DIR)/{vendor,platform,service-provider}
 	mkdir $(PKG_BUILD_DIR)/core
 	[ ! -d ./src/service-provider/ ] || $(CP) ./src/service-provider/. $(PKG_BUILD_DIR)/service-provider/
-	git clone --single-branch --branch plume/dev git@github.com:plume-design/opensync-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
-	git clone --single-branch --branch plume/dev git@github.com:plume-design/opensync-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
+	git clone --single-branch --branch plume/dev_0.2.0.0 git@github.com:plume-design/opensync-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
+	git clone --single-branch --branch plume/dev_0.2.0.0 git@github.com:plume-design/opensync-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
 	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
 	rm -rf $(PKG_BUILD_DIR)/vendor/plume-openwrt/.git
 	$(Build/Patch)
