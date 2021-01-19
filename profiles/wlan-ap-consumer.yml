@@ -45,7 +45,6 @@ packages:
   - uhttpd-mod-ubus
   - uuidgen
   - zlib
-  - wlan-ap-config
   - wpad-openssl
   - ip-bridge
   - opensync
