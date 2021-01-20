@@ -49,8 +49,14 @@ define Build/Prepare
 	rm $(PKG_BUILD_DIR)/{vendor,platform,service-provider}
 	mkdir $(PKG_BUILD_DIR)/core
 	[ ! -d ./src/service-provider/ ] || $(CP) ./src/service-provider/. $(PKG_BUILD_DIR)/service-provider/
-	git clone --single-branch --branch plume/dev git@github.com:plume-design/opensync-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
-	git clone --single-branch --branch plume/dev git@github.com:plume-design/opensync-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
+	$(eval GIT_DEFAULT_BRANCH := plume/dev)
+	$(eval GIT_CURRENT_BRANCH := $(shell git branch | sed -n 's/^\* //p'))
+	git clone --no-checkout git@github.com:plume-design/opensync-platform-cfg80211.git $(PKG_BUILD_DIR)/platform/cfg80211
+	$(eval GIT_BRANCH_IN_PLATFORM := $(shell git -C $(PKG_BUILD_DIR)/platform/cfg80211 rev-parse -q --verify $(GIT_CURRENT_BRANCH) > /dev/null && echo $(GIT_CURRENT_BRANCH) || echo $(GIT_DEFAULT_BRANCH)))
+	git -C $(PKG_BUILD_DIR)/platform/cfg80211 checkout $(GIT_BRANCH_IN_PLATFORM)
+	git clone --no-checkout git@github.com:plume-design/opensync-vendor-plume-openwrt.git $(PKG_BUILD_DIR)/vendor/plume-openwrt
+	$(eval GIT_BRANCH_IN_VENDOR := $(shell git -C $(PKG_BUILD_DIR)/vendor/plume-openwrt rev-parse -q --verify $(GIT_CURRENT_BRANCH) > /dev/null && echo $(GIT_CURRENT_BRANCH) || echo $(GIT_DEFAULT_BRANCH)))
+	git -C $(PKG_BUILD_DIR)/vendor/plume-openwrt checkout $(GIT_BRANCH_IN_VENDOR)
 	rm -rf $(PKG_BUILD_DIR)/platform/cfg80211/.git
 	rm -rf $(PKG_BUILD_DIR)/vendor/plume-openwrt/.git
 	$(Build/Patch)
