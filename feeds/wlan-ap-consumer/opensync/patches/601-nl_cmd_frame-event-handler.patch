@@ -19,7 +19,7 @@ diff -urN a/src/lib/hostap/src/hapd.c b/src/lib/hostap/src/hapd.c
      const char *mac;
      const char *k;
      const char *v;
-+    const char *type;
++    const char *type = "";
      char *args = strdupa(buf);
      char *kv;
  
