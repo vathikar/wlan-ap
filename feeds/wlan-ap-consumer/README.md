@@ -12,7 +12,13 @@ The basic procedure is the same as described in the root [README.md](../../READM
 To generate the .config file, use the following command:
 ```
 cd openwrt
-./scripts/gen_config.py ea8300 wlan-ap-consumer wifi
+./scripts/gen_config.py ea8300 wlan-ap-consumer wifi-ath
+```
+
+If you want to build SR400ac, you should use:
+```
+cd openwrt
+./scripts/gen_config.py sr400ac wlan-ap-consumer wifi-bcm
 ```
 
 Immediately after this step, apply patches found in `feeds/wlan-ap-consumer/additional-patches`:
