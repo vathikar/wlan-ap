@@ -1,0 +1,5 @@
+---
+profile: adtran_sr400ac
+target: brcm63xx
+subtarget: generic
+description: Build image for the Adtran SR400ac
